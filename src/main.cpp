@@ -17,7 +17,7 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
     }
 
 
-    if (!SDL_CreateWindowAndRenderer("Shooter Game", 480, 272, 0, &window, &renderer)) {
+    if (!SDL_CreateWindowAndRenderer("2048", 480, 272, 0, &window, &renderer)) {
         SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
@@ -89,11 +89,28 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     return SDL_APP_CONTINUE;
 }
 
+SDL_FRect backrect = {104, 0, 272, 272};
+
+void DrawBackground()
+{
+    SDL_SetRenderDrawColor(renderer, 230, 205, 130, 255);
+    SDL_RenderFillRect(renderer, &backrect);
+
+    SDL_SetRenderDrawColor(renderer, 105, 100, 80, 255);
+    SDL_RenderRect(renderer, &backrect);
+    SDL_RenderLine(renderer, 104, 68, 376, 68);
+    SDL_RenderLine(renderer, 104, 136, 376, 136);
+    SDL_RenderLine(renderer, 104, 204, 376, 204);
+    SDL_RenderLine(renderer, 172, 0, 172, 272);
+    SDL_RenderLine(renderer, 240, 0, 240, 272);
+    SDL_RenderLine(renderer, 308, 0, 308, 272);
+}
 
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 247, 198, 52, 255);
+    SDL_RenderClear(renderer); 
+    DrawBackground();
 
     SDL_RenderPresent(renderer);
 
