@@ -3,8 +3,26 @@
 #include <stdio.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <SDL3_image/SDL_image.h>
 
 #include "main.h"
+
+
+SDL_FRect backgroundRect{0, 0, 480, 272};
+SDL_Texture* backgroundTexture{};
+
+SDL_FRect baseRect{107,1 , 65, 65};
+
+int game[4][4]{0};
+
+void showGame()
+{
+    for (int i = 0; i < 4; ++i) 
+    {
+        for (int j = 0; j < 4; ++j) std::cout << game[i][j] << " ";
+        std::cout << std::endl;
+    }
+}
 
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
@@ -21,6 +39,8 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[])
         SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
+
+    showGame();
 
     return SDL_APP_CONTINUE;
 }
@@ -89,30 +109,21 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event)
     return SDL_APP_CONTINUE;
 }
 
-SDL_FRect backrect = {104, 0, 272, 272};
-
 void DrawBackground()
 {
-    SDL_SetRenderDrawColor(renderer, 230, 205, 130, 255);
-    SDL_RenderFillRect(renderer, &backrect);
-
-    SDL_SetRenderDrawColor(renderer, 105, 100, 80, 255);
-    SDL_RenderRect(renderer, &backrect);
-    SDL_RenderLine(renderer, 104, 68, 376, 68);
-    SDL_RenderLine(renderer, 104, 136, 376, 136);
-    SDL_RenderLine(renderer, 104, 204, 376, 204);
-    SDL_RenderLine(renderer, 172, 0, 172, 272);
-    SDL_RenderLine(renderer, 240, 0, 240, 272);
-    SDL_RenderLine(renderer, 308, 0, 308, 272);
+    backgroundTexture = IMG_LoadTexture(renderer, "../assets/textures/background_2048game.png");
+    SDL_RenderTexture(renderer, backgroundTexture, NULL, &backgroundRect);
 }
 
 SDL_AppResult SDL_AppIterate(void *appstate)
 {
-    SDL_SetRenderDrawColor(renderer, 247, 198, 52, 255);
-    SDL_RenderClear(renderer); 
     DrawBackground();
 
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderFillRect(renderer, &baseRect);
+
     SDL_RenderPresent(renderer);
+    SDL_DestroyTexture(backgroundTexture);
 
     return SDL_APP_CONTINUE;
 }
